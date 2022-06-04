@@ -5,7 +5,10 @@ struct CarDetected;
 
 template <typename T>
 struct AutoBrake {
-    AutoBrake(const T& Publish) : speed_mps{}, publish{ publish } { };
+    AutoBrake(const T& Publish)
+        : collision_threshold_s { 5 },
+          speed_mps{},
+          publish{ publish } { };
     void observe(const SpeedUpdate& su) { };
     void observe(const CarDetected& cd) { };
     void set_collision_threshold_s(double x) {

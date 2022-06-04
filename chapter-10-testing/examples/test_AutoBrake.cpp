@@ -12,9 +12,16 @@ constexpr void assert_that(bool statement, const char* message) {
 }
 
 // Tests
+
 void initial_speed_is_zero() {
     AutoBrake auto_brake{ [](const BrakeCommand&) {} };
     assert_that(auto_brake.get_speed_mps() == 0L, "speed not equal 0");
+}
+
+void initial_sensitivity_is_five() {
+    AutoBrake auto_brake{ [](const BrakeCommand&) {} };
+    assert_that(auto_brake.get_collision_threshold_s() == 5L,
+                "sensitivity is not 5");
 }
 
 // Test harness
@@ -29,4 +36,5 @@ void run_test(void(*unit_test)(), const char* name) {
 
 int main() {
     run_test(initial_speed_is_zero, "initial speed is 0");
+    run_test(initial_sensitivity_is_five, "initial sensitivity is 5");
 }
