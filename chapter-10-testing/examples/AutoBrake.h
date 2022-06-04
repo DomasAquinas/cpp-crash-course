@@ -1,5 +1,7 @@
 // AutoBrake class template
 
+#include <stdexcept>
+
 struct SpeedUpdate;
 struct CarDetected;
 
@@ -12,6 +14,7 @@ struct AutoBrake {
     void observe(const SpeedUpdate& su) { };
     void observe(const CarDetected& cd) { };
     void set_collision_threshold_s(double x) {
+        if (x < 1) throw std::runtime_error{ "Collision less than 1." };
         collision_threshold_s = x;
     }
     double get_collision_threshold_s() const {

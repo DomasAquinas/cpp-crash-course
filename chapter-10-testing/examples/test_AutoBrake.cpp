@@ -24,6 +24,16 @@ void initial_sensitivity_is_five() {
                 "sensitivity is not 5");
 }
 
+void sensitivity_greater_than_1() {
+    AutoBrake auto_brake{ [](const BrakeCommand&) {} };
+    try {
+        auto_brake.set_collision_threshold_s(0.5L);
+    } catch(const std::exception&) {
+        return;
+    }
+    assert_that(false, "no exception thrown");
+}
+
 // Test harness
 void run_test(void(*unit_test)(), const char* name) {
     try {
@@ -37,4 +47,5 @@ void run_test(void(*unit_test)(), const char* name) {
 int main() {
     run_test(initial_speed_is_zero, "initial speed is 0");
     run_test(initial_sensitivity_is_five, "initial sensitivity is 5");
+    run_test(sensitivity_greater_than_1, "sensitivity greater than 1");
 }
