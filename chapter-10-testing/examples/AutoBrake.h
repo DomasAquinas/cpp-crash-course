@@ -1,8 +1,11 @@
 // AutoBrake class template
 
+struct SpeedUpdate;
+struct CarDetected;
+
 template <typename T>
 struct AutoBrake {
-    AutoBrake(const T& Publish) : publish{ publish } { };
+    AutoBrake(const T& Publish) : speed_mps{}, publish{ publish } { };
     void observe(const SpeedUpdate& su) { };
     void observe(const CarDetected& cd) { };
     void set_collision_threshold_s(double x) {
