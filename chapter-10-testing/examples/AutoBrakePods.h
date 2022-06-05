@@ -1,4 +1,5 @@
 // POD classes for the AutoBrake examples
+#pragma once
 
 struct SpeedUpdate {
     double velocity_mps;

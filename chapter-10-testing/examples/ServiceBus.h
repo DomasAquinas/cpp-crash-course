@@ -1,4 +1,5 @@
 // Service bus for the AutoBrake examples
+#pragma once
 
 struct BrakeCommand;
 

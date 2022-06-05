@@ -43,6 +43,20 @@ void speed_is_saved() {
     assert_that(0L == auto_brake.get_speed_mps(), "speed not saved to 0");
 }
 
+void alert_when_imminent() {
+    int brake_commands_published{};
+    AutoBrake auto_brake{
+        [&brake_commands_published](const BrakeCommand&) {
+            brake_commands_published++;
+        }
+    };
+    auto_brake.set_collision_threshold_s(10L);
+    auto_brake.observe(SpeedUpdate{ 100L });
+    auto_brake.observe(CarDetected{ 100L, 0L});
+    assert_that(brake_commands_published == 1,
+                "brake commands published not one");
+}
+
 // Test harness
 void run_test(void(*unit_test)(), const char* name) {
     try {
@@ -58,4 +72,5 @@ int main() {
     run_test(initial_sensitivity_is_five, "initial sensitivity is 5");
     run_test(sensitivity_greater_than_1, "sensitivity greater than 1");
     run_test(speed_is_saved, "speed is saved");
+    run_test(alert_when_imminent, "alert when imminent");
 }
