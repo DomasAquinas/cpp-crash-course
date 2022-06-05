@@ -4,7 +4,6 @@
 #include <stdexcept>
 
 #include "AutoBrake.h"
-#include "AutoBrakePods.h"
 
 // Assertion function
 constexpr void assert_that(bool statement, const char* message) {
@@ -34,6 +33,16 @@ void sensitivity_greater_than_1() {
     assert_that(false, "no exception thrown");
 }
 
+void speed_is_saved() {
+    AutoBrake auto_brake{ [](BrakeCommand&) {} };
+    auto_brake.observe(SpeedUpdate{ 100L });
+    assert_that(100L == auto_brake.get_speed_mps(), "speed not saved to 100");
+    auto_brake.observe(SpeedUpdate{ 50L });
+    assert_that(50L == auto_brake.get_speed_mps(), "speed not saved to 50");
+    auto_brake.observe(SpeedUpdate{ 0L });
+    assert_that(0L == auto_brake.get_speed_mps(), "speed not saved to 0");
+}
+
 // Test harness
 void run_test(void(*unit_test)(), const char* name) {
     try {
@@ -48,4 +57,5 @@ int main() {
     run_test(initial_speed_is_zero, "initial speed is 0");
     run_test(initial_sensitivity_is_five, "initial sensitivity is 5");
     run_test(sensitivity_greater_than_1, "sensitivity greater than 1");
+    run_test(speed_is_saved, "speed is saved");
 }

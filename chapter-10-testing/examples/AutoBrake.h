@@ -2,8 +2,8 @@
 
 #include <stdexcept>
 
-struct SpeedUpdate;
-struct CarDetected;
+#include "AutoBrakePods.h"
+
 
 template <typename T>
 struct AutoBrake {
@@ -11,7 +11,9 @@ struct AutoBrake {
         : collision_threshold_s { 5 },
           speed_mps{},
           publish{ publish } { };
-    void observe(const SpeedUpdate& su) { };
+    void observe(const SpeedUpdate& su) {
+        speed_mps = su.velocity_mps;
+    };
     void observe(const CarDetected& cd) { };
     void set_collision_threshold_s(double x) {
         if (x < 1) throw std::runtime_error{ "Collision less than 1." };
