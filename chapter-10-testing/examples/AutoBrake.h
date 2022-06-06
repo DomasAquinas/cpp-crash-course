@@ -1,6 +1,7 @@
 // AutoBrake class template
 #pragma once
 
+#include <iostream>
 #include <stdexcept>
 
 #include "AutoBrakePods.h"

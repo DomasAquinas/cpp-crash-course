@@ -1,6 +1,7 @@
 // Autobrake unit tests
 
 #include <cstdio>
+#include <iostream>
 #include <stdexcept>
 
 #include "AutoBrake.h"
@@ -45,11 +46,11 @@ void speed_is_saved() {
 
 void alert_when_imminent() {
     int brake_commands_published{};
-    AutoBrake auto_brake{
-        [&brake_commands_published](const BrakeCommand&) {
+    auto count_brake_commands = 
+        [&brake_commands_published](const BrakeCommand) {
             brake_commands_published++;
-        }
-    };
+        };
+    AutoBrake auto_brake{ count_brake_commands };
     auto_brake.set_collision_threshold_s(10L);
     auto_brake.observe(SpeedUpdate{ 100L });
     auto_brake.observe(CarDetected{ 100L, 0L});
