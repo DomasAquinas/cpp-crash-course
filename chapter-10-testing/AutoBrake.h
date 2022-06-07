@@ -11,7 +11,8 @@
 struct AutoBrake {
     AutoBrake(IServiceBus& bus)
         : collision_threshold_s{ 5 },
-          speed_mps{} {
+          speed_mps{},
+          last_speed_limit{ 39 } {
         bus.subscribe([this](const SpeedUpdate& update) {
             speed_mps = update.velocity_mps;
         });
