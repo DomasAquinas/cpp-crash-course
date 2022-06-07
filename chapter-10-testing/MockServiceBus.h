@@ -16,8 +16,12 @@ public:
     void subscribe(CarDetectedCallback callback) override {
         car_detected_callback = callback;
     }
+    void subscribe(SpeedLimitCallback callback) override {
+        speed_limit_callback = callback;
+    }
     BrakeCommand last_command{};
     int commands_published{};
     SpeedUpdateCallback speed_update_callback{};
     CarDetectedCallback car_detected_callback{};
+    SpeedLimitCallback speed_limit_callback{};
 };
