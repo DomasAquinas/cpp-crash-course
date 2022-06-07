@@ -69,6 +69,13 @@ void no_alert_when_not_imminent() {
     assert_that(bus.commands_published == 0, "brake command published");
 }
 
+void initial_speed_limit_is_39() {
+    MockServicebus bus{};
+    AutoBrake auto_brake{ bus };
+    assert_that(auto_brake.get_last_speed_limit() == 39L,
+                "initial speed limit not 39");
+}
+
 // Test harness
 void run_test(void(*unit_test)(), const char* name) {
     try {
@@ -86,4 +93,5 @@ int main() {
     run_test(speed_is_saved, "speed is saved");
     run_test(alert_when_imminent, "alert when imminent");
     run_test(no_alert_when_not_imminent, "no alert when not imminent");
+    run_test(initial_speed_limit_is_39, "initial speed limit is 39");
 }
