@@ -58,6 +58,19 @@ void alert_when_imminent() {
                 "brake commands published not one");
 }
 
+void no_alert_when_not_imminent() {
+    int brake_commands_published{};
+    auto count_brake_commands =
+        [&brake_commands_published](const BrakeCommand) {
+            brake_commands_published++;
+        };
+    AutoBrake auto_brake{ count_brake_commands };
+    auto_brake.set_collision_threshold_s(2L);
+    auto_brake.observe(SpeedUpdate{ 100L });
+    auto_brake.observe(CarDetected{ 1000L, 50L });
+    assert_that(brake_commands_published == 0, "brake command published");
+}
+
 // Test harness
 void run_test(void(*unit_test)(), const char* name) {
     try {
@@ -74,4 +87,5 @@ int main() {
     run_test(sensitivity_greater_than_1, "sensitivity greater than 1");
     run_test(speed_is_saved, "speed is saved");
     run_test(alert_when_imminent, "alert when imminent");
+    run_test(no_alert_when_not_imminent, "no alert when not imminent");
 }
