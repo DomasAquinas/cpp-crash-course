@@ -1,4 +1,5 @@
 // Service bus interface
+#pragma once
 
 #include <functional>
 

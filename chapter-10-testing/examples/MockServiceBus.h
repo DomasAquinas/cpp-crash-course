@@ -1,10 +1,12 @@
 // Service bus mock class
+#pragma once
 
 #include "AutoBrakePods.h"
 #include "IServiceBus.h"
 
 
-class MockServicebus : IServiceBus {
+class MockServicebus : public IServiceBus {
+public:
     void publish(const BrakeCommand&) override {
         commands_published++;
     }
