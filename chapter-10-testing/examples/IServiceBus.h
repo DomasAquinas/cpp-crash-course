@@ -7,6 +7,7 @@ struct CarDetected;
 
 struct BrakeCommand;
 
+
 using SpeedUpdateCallback = std::function<void(const SpeedUpdate&)>;
 using CarDetectedCallback = std::function<void(const CarDetected&)>;
 
