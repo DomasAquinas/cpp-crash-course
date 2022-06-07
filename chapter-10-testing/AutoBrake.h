@@ -12,6 +12,7 @@ struct AutoBrake {
     AutoBrake(IServiceBus& bus)
         : collision_threshold_s{ 5 },
           speed_mps{},
+          // Exercise 10-4
           last_speed_limit{ 39 } {
         bus.subscribe([this](const SpeedUpdate& update) {
             speed_mps = update.velocity_mps;
@@ -25,6 +26,9 @@ struct AutoBrake {
                 bus.publish(BrakeCommand{ time_to_collision_s });
             }
         });
+        bus.subscribe([this](const SpeedLimitDetected& limit) {
+            last_speed_limit = limit.speed_mps;
+        });
     }
     void set_collision_threshold_s(double x) {
         if (x < 1) throw std::runtime_error{ "Collision less than 1." };
@@ -36,6 +40,7 @@ struct AutoBrake {
     double get_speed_mps() const {
         return speed_mps;
     }
+    // Exercise 10-2
     double get_last_speed_limit() const {
         return last_speed_limit;
     }
