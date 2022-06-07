@@ -35,7 +35,11 @@ struct AutoBrake {
     double get_speed_mps() const {
         return speed_mps;
     }
+    double get_last_speed_limit() const {
+        return last_speed_limit;
+    }
 private:
     double collision_threshold_s;
     double speed_mps;
+    double last_speed_limit;
 };
