@@ -31,8 +31,12 @@ struct AutoBrake {
             }
         });
         // Exercise 10-6
-        bus.subscribe([this](const SpeedLimitDetected& limit) {
+        bus.subscribe([this, &bus](const SpeedLimitDetected& limit) {
             last_speed_limit = limit.speed_mps;
+            const auto speed_over_limit = speed_mps - last_speed_limit;
+            if (speed_over_limit > 0) {
+                bus.publish(BrakeCommand{ 0 });
+            }
         });
     }
     void set_collision_threshold_s(double x) {

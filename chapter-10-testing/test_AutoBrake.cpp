@@ -115,6 +115,18 @@ void alert_when_over_limit() {
                 "time to collision not 0");
 }
 
+void alert_when_limit_drops_below_speed() {
+    MockServicebus bus{};
+    AutoBrake auto_brake{ bus };
+    bus.speed_limit_callback(SpeedLimitDetected{ 35L });
+    bus.speed_update_callback(SpeedUpdate{ 30L });
+    bus.speed_limit_callback(SpeedLimitDetected{ 25L });
+    assert_that(bus.commands_published == 1,
+                "brake commands published not one");
+    assert_that(bus.last_command.time_to_collision_s == 0,
+                "time to collision not 0");
+}
+
 // Test harness
 void run_test(void(*unit_test)(), const char* name) {
     try {
@@ -136,4 +148,6 @@ int main() {
     run_test(speed_limit_is_saved, "speed limit is saved");
     run_test(no_alert_when_under_limit, "no alert when under limit");
     run_test(alert_when_over_limit, "alert when over limit");
+    run_test(alert_when_limit_drops_below_speed,
+             "alert when limit drops below speed");
 }
