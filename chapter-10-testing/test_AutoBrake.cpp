@@ -54,6 +54,7 @@ void alert_when_imminent() {
     MockServicebus bus{};
     AutoBrake auto_brake{ bus };
     auto_brake.set_collision_threshold_s(10L);
+    bus.speed_limit_callback(SpeedLimitDetected{ 200L });
     bus.speed_update_callback(SpeedUpdate{ 100L });
     bus.car_detected_callback(CarDetected{ 100L, 0L});
     assert_that(bus.commands_published == 1,
@@ -64,6 +65,7 @@ void no_alert_when_not_imminent() {
     MockServicebus bus{};
     AutoBrake auto_brake{ bus };
     auto_brake.set_collision_threshold_s(2L);
+    bus.speed_limit_callback(SpeedLimitDetected{ 200L });
     bus.speed_update_callback(SpeedUpdate{ 100L });
     bus.car_detected_callback(CarDetected{ 1000L, 50L });
     assert_that(bus.commands_published == 0, "brake command published");
@@ -101,6 +103,18 @@ void no_alert_when_under_limit() {
     assert_that(bus.commands_published == 0, "brake command published");
 }
 
+// Exercise 10-9
+void alert_when_over_limit() {
+    MockServicebus bus{};
+    AutoBrake auto_brake{ bus };
+    bus.speed_limit_callback(SpeedLimitDetected{ 35L });
+    bus.speed_update_callback(SpeedUpdate{ 40L });
+    assert_that(bus.commands_published == 1,
+                "brake commands published not one");
+    assert_that(bus.last_command.time_to_collision_s == 0,
+                "time to collision not 0");
+}
+
 // Test harness
 void run_test(void(*unit_test)(), const char* name) {
     try {
@@ -121,4 +135,5 @@ int main() {
     run_test(initial_speed_limit_is_39, "initial speed limit is 39");
     run_test(speed_limit_is_saved, "speed limit is saved");
     run_test(no_alert_when_under_limit, "no alert when under limit");
+    run_test(alert_when_over_limit, "alert when over limit");
 }

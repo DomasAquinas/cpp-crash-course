@@ -14,8 +14,12 @@ struct AutoBrake {
           speed_mps{},
           // Exercise 10-4
           last_speed_limit{ 39 } {
-        bus.subscribe([this](const SpeedUpdate& update) {
+        bus.subscribe([this, &bus](const SpeedUpdate& update) {
             speed_mps = update.velocity_mps;
+            const auto speed_over_limit = speed_mps - last_speed_limit;
+            if (speed_over_limit > 0) {
+                bus.publish(BrakeCommand{ 0 });
+            }
         });
         bus.subscribe([this, &bus](const CarDetected& cd) {
             const auto relative_velocity_mps = speed_mps - cd.velocity_mps;
