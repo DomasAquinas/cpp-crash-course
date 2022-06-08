@@ -26,6 +26,7 @@ struct AutoBrake {
                 bus.publish(BrakeCommand{ time_to_collision_s });
             }
         });
+        // Exercise 10-6
         bus.subscribe([this](const SpeedLimitDetected& limit) {
             last_speed_limit = limit.speed_mps;
         });

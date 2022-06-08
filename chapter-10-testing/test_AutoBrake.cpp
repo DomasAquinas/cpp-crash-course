@@ -90,7 +90,15 @@ void speed_limit_is_saved() {
     bus.speed_limit_callback(SpeedLimitDetected{ 70L });
     assert_that(auto_brake.get_last_speed_limit() == 70L,
                 "speed limit not saved to 70");
+}
 
+// Exercise 10-7
+void no_alert_when_under_limit() {
+    MockServicebus bus{};
+    AutoBrake auto_brake{ bus };
+    bus.speed_limit_callback(SpeedLimitDetected{ 35L });
+    bus.speed_update_callback(SpeedUpdate{ 34L });
+    assert_that(bus.commands_published == 0, "brake command published");
 }
 
 // Test harness
@@ -112,4 +120,5 @@ int main() {
     run_test(no_alert_when_not_imminent, "no alert when not imminent");
     run_test(initial_speed_limit_is_39, "initial speed limit is 39");
     run_test(speed_limit_is_saved, "speed limit is saved");
+    run_test(no_alert_when_under_limit, "no alert when under limit");
 }
